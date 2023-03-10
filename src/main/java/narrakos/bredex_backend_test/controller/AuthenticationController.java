@@ -1,13 +1,11 @@
 package narrakos.bredex_backend_test.controller;
 
 import narrakos.bredex_backend_test.entity.User;
+import narrakos.bredex_backend_test.exceptions.AppConstraintViolationException;
 import narrakos.bredex_backend_test.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -30,12 +28,12 @@ public class AuthenticationController {
         try {
             userRepository.save(user);
         } catch (ConstraintViolationException e) {
-            List<String> violationMessages = e.getConstraintViolations()
+            String violationMessages = e.getConstraintViolations()
                     .stream()
                     .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.joining("; "));
 
-            return ResponseEntity.badRequest().body(violationMessages);
+            throw new AppConstraintViolationException(violationMessages);
         }
 
         return ResponseEntity.ok().build();
