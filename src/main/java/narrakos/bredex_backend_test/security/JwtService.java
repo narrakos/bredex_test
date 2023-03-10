@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import narrakos.bredex_backend_test.entity.Token;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +19,18 @@ public class JwtService {
     private static final String SECRET_KEY = "38792F423F4528482B4D6251655468576D5A7134743777217A24432646294A40";
     private static final int TOKEN_EXPIRATION_IN_MS = 60_000 * 60; // 60 min
 
-    public String generateToken(UserDetails userDetails) {
-        return Jwts.builder()
+    public Token generateToken(UserDetails userDetails) {
+        Date issued = new Date(System.currentTimeMillis());
+        Date expiration = new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_IN_MS);
+
+        String token = Jwts.builder()
                 .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_IN_MS))
+                .setIssuedAt(issued)
+                .setExpiration(expiration)
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
+
+        return new Token(token, issued, expiration);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
