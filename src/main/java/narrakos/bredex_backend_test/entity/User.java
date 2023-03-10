@@ -63,6 +63,10 @@ public class User {
         this.email = email;
     }
 
+    public String getPassword() {
+        return "password";
+    }
+
     //id or id + email would probably be enough
     @Override
     public boolean equals(Object o) {
