@@ -3,7 +3,7 @@ package narrakos.bredex_backend_test.controller;
 import narrakos.bredex_backend_test.entity.User;
 import narrakos.bredex_backend_test.exceptions.AppConstraintViolationException;
 import narrakos.bredex_backend_test.repository.UserRepository;
-import narrakos.bredex_backend_test.service.UserService;
+import narrakos.bredex_backend_test.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 @RequestMapping("auth")
 public class AuthenticationController {
 
-    private final UserService userService;
+    private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
 
     @Autowired
-    public AuthenticationController(UserService userService, UserRepository userRepository) {
-        this.userService = userService;
+    public AuthenticationController(AuthenticationService authenticationService, UserRepository userRepository) {
+        this.authenticationService = authenticationService;
         this.userRepository = userRepository;
     }
 
@@ -35,7 +35,7 @@ public class AuthenticationController {
         User user = new User(name, email);
 
         try {
-            userService.saveUser(user);
+            userRepository.save(user);
         } catch (ConstraintViolationException e) {
             String violationMessages = e.getConstraintViolations()
                     .stream()
@@ -51,7 +51,7 @@ public class AuthenticationController {
 
     @PostMapping("login")
     public ResponseEntity<AuthenticationResponse> login(@RequestParam("email") String email) {
-        String token = userService.loginUser(email);
+        String token = authenticationService.loginUser(email);
         return ResponseEntity.ok(new AuthenticationResponse(token));
     }
 

@@ -10,21 +10,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class AuthenticationService {
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserService(UserRepository userRepository, JwtService jwtService, AuthenticationManager authenticationManager) {
+    public AuthenticationService(UserRepository userRepository, JwtService jwtService, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
-    }
-
-    public User saveUser(User user) {
-        return userRepository.save(user);
     }
 
     public String loginUser(String email) {
