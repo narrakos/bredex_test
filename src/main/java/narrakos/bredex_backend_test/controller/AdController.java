@@ -37,6 +37,12 @@ public class AdController {
         return ResponseEntity.ok(new AdResponse(ad));
     }
 
+    @DeleteMapping("/ad/{id}")
+    public ResponseEntity<Object> deleteAd(@NotNull @PathVariable("id") Long adId) {
+        adService.deleteAd(adId);
+        return ResponseEntity.ok().build();
+    }
+
     private String buildAdUrl(Ad ad, HttpServletRequest httpRequest) {
         return ServletUriComponentsBuilder
                 .fromRequestUri(httpRequest)

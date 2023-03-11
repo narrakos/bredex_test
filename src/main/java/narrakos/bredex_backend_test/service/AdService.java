@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class AdService {
@@ -39,5 +40,18 @@ public class AdService {
 
     public Ad getAd(Long adId) {
         return adRepository.findById(adId).orElseThrow();
+    }
+
+    public void deleteAd(Long adId) {
+        Ad ad = adRepository.findById(adId).orElseThrow();
+
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User savedUser = userRepository.findByEmail(userEmail).orElseThrow();
+
+        if(!ad.getUser().equals(savedUser)) {
+            throw new RuntimeException();
+        }
+
+        adRepository.delete(ad);
     }
 }
