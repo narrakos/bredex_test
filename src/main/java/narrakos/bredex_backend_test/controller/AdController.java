@@ -2,10 +2,8 @@ package narrakos.bredex_backend_test.controller;
 
 import narrakos.bredex_backend_test.controller.response.AdCreationResponse;
 import narrakos.bredex_backend_test.entity.Ad;
-import narrakos.bredex_backend_test.controller.request.AdCreationRequest;
 import narrakos.bredex_backend_test.service.AdService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +26,6 @@ public class AdController {
     public ResponseEntity<AdCreationResponse> postAd(@RequestBody AdCreationRequest request,
                                                      HttpServletRequest httpRequest) {
         Ad ad = adService.createAd(request);
-        System.out.println(httpRequest.getHeaderNames());
         String adUrl = buildAdUrl(ad, httpRequest);
         return ResponseEntity.ok(new AdCreationResponse(adUrl));
     }
