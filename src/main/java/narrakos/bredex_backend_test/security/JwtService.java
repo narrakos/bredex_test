@@ -6,6 +6,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import narrakos.bredex_backend_test.entity.Token;
+import narrakos.bredex_backend_test.repository.TokenRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,12 @@ public class JwtService {
 
     private static final String SECRET_KEY = "38792F423F4528482B4D6251655468576D5A7134743777217A24432646294A40";
     private static final int TOKEN_EXPIRATION_IN_MS = 60_000 * 60; // 60 min
+    private final TokenRepository tokenRepository;
+
+    @Autowired
+    public JwtService(TokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
+    }
 
     public Token generateToken(UserDetails userDetails) {
         Date issued = new Date(System.currentTimeMillis());
@@ -35,7 +43,14 @@ public class JwtService {
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String email = extractEmail(token);
-        return email.equals(userDetails.getUsername()) && isTokenNotExpired(token);
+
+        return email.equals(userDetails.getUsername())
+                && isTokenNotExpired(token)
+                && isTokenInDatabaseAndNotRevoked(token);
+    }
+
+    private boolean isTokenInDatabaseAndNotRevoked(String token) {
+        return !tokenRepository.findByToken(token).orElseThrow().isRevoked();
     }
 
     private boolean isTokenNotExpired(String token) {

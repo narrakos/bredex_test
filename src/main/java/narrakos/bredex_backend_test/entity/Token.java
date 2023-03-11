@@ -25,11 +25,14 @@ public class Token {
     @Temporal(TemporalType.TIMESTAMP)
     private Date expiresAt;
     @Column
+    //flipping logic should be considered
     private boolean revoked = false;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Token() {
+    }
 
     public Long getId() {
         return id;

@@ -1,6 +1,7 @@
 package narrakos.bredex_backend_test.service;
 
 import narrakos.bredex_backend_test.entity.Token;
+import narrakos.bredex_backend_test.entity.User;
 import narrakos.bredex_backend_test.repository.TokenRepository;
 import narrakos.bredex_backend_test.security.AppUserDetails;
 import narrakos.bredex_backend_test.security.JwtService;
@@ -9,6 +10,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthenticationService {
@@ -32,6 +36,16 @@ public class AuthenticationService {
         Token token = jwtService.generateToken(userDetails);
         token.setUser(userDetails.getUser());
         tokenRepository.save(token);
+        revokeOldTokens(userDetails.getUser(), token);
         return token.getToken();
+    }
+
+    private void revokeOldTokens(User user, Token token) {
+        List<Token> oldTokens = tokenRepository.findByUserAndRevokedFalse(user)
+                .stream()
+                .filter(t -> !t.equals(token) && !t.isRevoked())
+                .collect(Collectors.toList());
+        oldTokens.forEach(t -> t.setRevoked(true));
+        tokenRepository.saveAll(oldTokens);
     }
 }

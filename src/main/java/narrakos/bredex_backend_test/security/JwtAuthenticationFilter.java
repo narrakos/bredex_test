@@ -5,6 +5,7 @@ import narrakos.bredex_backend_test.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -18,12 +19,12 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final UserRepository userRepository;
+    private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
 
     @Autowired
-    public JwtAuthenticationFilter(UserRepository userRepository, JwtService jwtService) {
-        this.userRepository = userRepository;
+    public JwtAuthenticationFilter(UserDetailsService userDetailsService, JwtService jwtService) {
+        this.userDetailsService = userDetailsService;
         this.jwtService = jwtService;
     }
 
@@ -43,8 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String email = jwtService.extractEmail(jwtToken);
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            User user = userRepository.findByEmail(email).orElseThrow();
-            AppUserDetails userDetails = new AppUserDetails(user);
+            AppUserDetails userDetails = (AppUserDetails) userDetailsService.loadUserByUsername(email);
             if (jwtService.isTokenValid(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(userDetails,
