@@ -39,7 +39,7 @@ public class DataPreloader implements ApplicationListener<ApplicationReadyEvent>
 
     private List<User> generateUsers() {
         return List.of(
-                new User("Teszt Tamás", "teszt.tamas0@gmail.com"),
+                new User("Teszt Tamás", "teszt.tamas@gmail.com"),
                 new User("Barbabas Bogue", "bbogue1@purevolume.com"),
                 new User("Flor Maeer", "fmaeer2@hatena.ne.jp"),
                 new User("Emelita Wissbey", "ewissbey3@freewebs.com"),
