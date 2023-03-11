@@ -36,8 +36,6 @@ public class User {
     @Pattern(regexp = "^[A-Za-z0-9+\\-_.&]{1,64}@.{1,255}$", message = EMAIL_FORMAT_INVALID_MESSAGE)
     @Size(max = 254, message = EMAIL_ADDRESS_TOO_LONG_MESSAGE)
     private String email;
-    @OneToMany(mappedBy = "user")
-    private List<Token> tokens = new ArrayList<>();
 
     public User() {
     }
@@ -71,13 +69,6 @@ public class User {
         return "password";
     }
 
-    public List<Token> getTokens() {
-        return tokens;
-    }
-
-    public void setTokens(List<Token> tokens) {
-        this.tokens = tokens;
-    }
 
     //id or id + email would probably be enough
     @Override
