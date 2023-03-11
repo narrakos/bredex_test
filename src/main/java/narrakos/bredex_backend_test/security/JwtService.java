@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import narrakos.bredex_backend_test.entity.Token;
+import narrakos.bredex_backend_test.exceptions.TokenNotFoundException;
 import narrakos.bredex_backend_test.repository.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -50,11 +51,11 @@ public class JwtService {
     }
 
     private boolean isTokenInDatabaseAndNotRevoked(String token) {
-        return !tokenRepository.findByToken(token).orElseThrow().isRevoked();
+        return !tokenRepository.findByToken(token).orElseThrow(TokenNotFoundException::new).isRevoked();
     }
 
     private boolean isTokenNotExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        return extractExpiration(token).after(new Date());
     }
 
     private Date extractExpiration(String token) {
