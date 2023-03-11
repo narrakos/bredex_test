@@ -41,6 +41,13 @@ public class Ad {
     public Ad() {
     }
 
+    public Ad(String brand, String type, String description, Long price) {
+        this.brand = brand;
+        this.type = type;
+        this.description = description;
+        this.price = price;
+    }
+
     public Long getId() {
         return id;
     }
