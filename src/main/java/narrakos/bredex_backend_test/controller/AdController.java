@@ -32,7 +32,7 @@ public class AdController {
     }
 
     @GetMapping("/ad/{id}")
-    public ResponseEntity<AdResponse> postAd(@NotNull @PathVariable("id") Long adId) {
+    public ResponseEntity<AdResponse> getAd(@NotNull @PathVariable("id") Long adId) {
         Ad ad = adService.getAd(adId);
         return ResponseEntity.ok(new AdResponse(ad));
     }
