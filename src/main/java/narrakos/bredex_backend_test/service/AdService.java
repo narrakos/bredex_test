@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Service
 public class AdService {
 
@@ -33,5 +35,9 @@ public class AdService {
         ad.setUser(user);
 
         return adRepository.save(ad);
+    }
+
+    public Ad getAd(Long adId) {
+        return adRepository.findById(adId).orElseThrow();
     }
 }
