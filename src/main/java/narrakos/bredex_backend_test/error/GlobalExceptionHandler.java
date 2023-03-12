@@ -1,12 +1,12 @@
 package narrakos.bredex_backend_test.error;
 
-import narrakos.bredex_backend_test.exceptions.AppConstraintViolationException;
+import narrakos.bredex_backend_test.exceptions.ObjectValidationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -16,11 +16,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers,
+                                                                  HttpStatus status,
+                                                                  WebRequest request) {
         List<String> fieldErrors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
@@ -43,13 +46,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 
-    @ExceptionHandler(AppConstraintViolationException.class)
-    public ResponseEntity<Object> handleConstraintViolationException(Exception e, WebRequest request) {
-        ApiError error = new ApiError(LocalDateTime.now(),
-                "Constraint Violation",
-                Collections.singletonList(e.getMessage())
-        );
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    @ExceptionHandler(ObjectValidationException.class)
+    public ResponseEntity<ObjectValidationException> handleConstraintViolationException(ObjectValidationException e,
+                                                                       WebRequest request) {
+        return ResponseEntity.badRequest().body(e);
     }
 }

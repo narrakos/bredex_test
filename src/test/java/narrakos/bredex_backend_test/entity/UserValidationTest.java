@@ -1,6 +1,8 @@
 package narrakos.bredex_backend_test.entity;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -85,7 +87,7 @@ class UserValidationTest {
 
     @Test
     void userWithLongestValidEmail() {
-        String email = "asd"+ "@" + "x".repeat(250); // length == 254
+        String email = "asd" + "@" + "x".repeat(250); // length == 254
         User user = new User("John Doe", email);
 
         assertUserHasNoConstraintViolations(user);
@@ -93,7 +95,7 @@ class UserValidationTest {
 
     @Test
     void userWithTooLongValidFormatEmail() {
-        String email = "asdf"+ "@" + "x".repeat(250); // length == 255
+        String email = "asdf" + "@" + "x".repeat(250); // length == 255
         User user = new User("John Doe", email);
 
         assertViolationsWithMessages(user, User.EMAIL_ADDRESS_TOO_LONG_MESSAGE);
@@ -105,7 +107,7 @@ class UserValidationTest {
         Assertions.assertTrue(violations.isEmpty());
     }
 
-    void assertViolationsWithMessages(User user, String... messages){
+    void assertViolationsWithMessages(User user, String... messages) {
         List<String> violationMessages = validator.validate(user).stream()
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());

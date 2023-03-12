@@ -8,8 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface AdRepository extends JpaRepository<Ad, Long> {
-    List<Ad> findAllByUser(User user);
-
     @Query(value = "SELECT a FROM Ad a WHERE " +
             "UPPER(a.brand) like UPPER(:brand) AND " +
             "UPPER(a.type) like UPPER(:type)"

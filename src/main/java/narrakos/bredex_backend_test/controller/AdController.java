@@ -1,10 +1,10 @@
 package narrakos.bredex_backend_test.controller;
 
-import narrakos.bredex_backend_test.controller.request.AdCreationRequest;
-import narrakos.bredex_backend_test.controller.request.AdSearchRequest;
-import narrakos.bredex_backend_test.controller.response.AdCreationResponse;
-import narrakos.bredex_backend_test.controller.response.AdResponse;
-import narrakos.bredex_backend_test.controller.response.AdSearchResponse;
+import narrakos.bredex_backend_test.controller.requestobject.AdCreationRequest;
+import narrakos.bredex_backend_test.controller.requestobject.AdSearchRequest;
+import narrakos.bredex_backend_test.controller.responseobject.AdCreationResponse;
+import narrakos.bredex_backend_test.controller.responseobject.AdResponse;
+import narrakos.bredex_backend_test.controller.responseobject.AdSearchResponse;
 import narrakos.bredex_backend_test.entity.Ad;
 import narrakos.bredex_backend_test.service.AdService;
 import org.springframework.beans.factory.annotation.Autowired;

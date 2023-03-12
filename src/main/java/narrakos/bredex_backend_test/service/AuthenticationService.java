@@ -30,11 +30,14 @@ public class AuthenticationService {
         this.tokenRepository = tokenRepository;
     }
 
+    //Could be modified to revoke every token before saving the new one sparing the filtering
     public String loginUser(String email) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, "password"));
         AppUserDetails userDetails = (AppUserDetails) userDetailsService.loadUserByUsername(email);
+
         Token token = jwtService.generateToken(userDetails);
         token.setUser(userDetails.getUser());
+
         tokenRepository.save(token);
         revokeOldTokens(userDetails.getUser(), token);
         return token.getToken();

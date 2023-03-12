@@ -1,4 +1,4 @@
-package narrakos.bredex_backend_test.controller.response;
+package narrakos.bredex_backend_test.controller.responseobject;
 
 import java.util.List;
 

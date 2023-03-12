@@ -1,11 +1,13 @@
 package narrakos.bredex_backend_test.service;
 
-import narrakos.bredex_backend_test.controller.request.AdCreationRequest;
-import narrakos.bredex_backend_test.controller.request.AdSearchRequest;
+import narrakos.bredex_backend_test.controller.requestobject.AdCreationRequest;
+import narrakos.bredex_backend_test.controller.requestobject.AdSearchRequest;
 import narrakos.bredex_backend_test.entity.Ad;
 import narrakos.bredex_backend_test.entity.User;
+import narrakos.bredex_backend_test.exceptions.InvalidTokenException;
 import narrakos.bredex_backend_test.repository.AdRepository;
 import narrakos.bredex_backend_test.repository.UserRepository;
+import narrakos.bredex_backend_test.util.ObjectValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,8 @@ public class AdService {
         ad.setPrice(request.getPrice());
         ad.setUser(user);
 
+        ObjectValidator.validateObject(ad);
+
         return adRepository.save(ad);
     }
 
@@ -52,7 +56,7 @@ public class AdService {
         User savedUser = userRepository.findByEmail(userEmail).orElseThrow();
 
         if (!ad.getUser().equals(savedUser)) {
-            throw new RuntimeException();
+            throw new InvalidTokenException();
         }
 
         adRepository.delete(ad);

@@ -1,4 +1,4 @@
-package narrakos.bredex_backend_test.controller.request;
+package narrakos.bredex_backend_test.controller.requestobject;
 
 public class AdSearchRequest {
 

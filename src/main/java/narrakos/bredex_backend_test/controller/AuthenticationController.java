@@ -1,9 +1,9 @@
 package narrakos.bredex_backend_test.controller;
 
-import narrakos.bredex_backend_test.entity.User;
-import narrakos.bredex_backend_test.exceptions.AppConstraintViolationException;
-import narrakos.bredex_backend_test.repository.UserRepository;
+import narrakos.bredex_backend_test.controller.requestobject.SignupRequest;
+import narrakos.bredex_backend_test.controller.responseobject.AuthenticationResponse;
 import narrakos.bredex_backend_test.service.AuthenticationService;
+import narrakos.bredex_backend_test.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,40 +11,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("auth")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public AuthenticationController(AuthenticationService authenticationService, UserRepository userRepository) {
+    public AuthenticationController(AuthenticationService authenticationService, UserService userService) {
         this.authenticationService = authenticationService;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @PostMapping("signup")
-    public ResponseEntity<Object> signup(@RequestParam("name") String name,
-                                         @RequestParam("email") String email) {
-
-        User user = new User(name, email);
-
-        try {
-            userRepository.save(user);
-        } catch (ConstraintViolationException e) {
-            String violationMessages = e.getConstraintViolations()
-                    .stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining("; "));
-
-            throw new AppConstraintViolationException(violationMessages);
-        }
-
+    public ResponseEntity<Object> signup(SignupRequest request) {
+        userService.saveUser(request);
         return ResponseEntity.ok().build();
     }
 
@@ -55,22 +37,4 @@ public class AuthenticationController {
         return ResponseEntity.ok(new AuthenticationResponse(token));
     }
 
-    private class AuthenticationResponse {
-        private String token;
-
-        public AuthenticationResponse() {
-        }
-
-        public AuthenticationResponse(String token) {
-            this.token = token;
-        }
-
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-    }
 }

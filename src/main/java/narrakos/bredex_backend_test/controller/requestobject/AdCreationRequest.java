@@ -1,19 +1,16 @@
-package narrakos.bredex_backend_test.controller.response;
+package narrakos.bredex_backend_test.controller.requestobject;
 
-import narrakos.bredex_backend_test.entity.Ad;
-
-public class AdResponse {
-
+public class AdCreationRequest {
     private String brand;
     private String type;
     private String description;
     private Long price;
 
-    public AdResponse(Ad ad) {
-        brand = ad.getBrand();
-        type = ad.getType();
-        description = ad.getDescription();
-        price = ad.getPrice();
+    public AdCreationRequest(String brand, String type, String description, Long price) {
+        this.brand = brand;
+        this.type = type;
+        this.description = description;
+        this.price = price;
     }
 
     public String getBrand() {

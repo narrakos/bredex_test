@@ -34,3 +34,5 @@ Ads:
 - Pictures for the ads
 - Search ads by price
 - Ad ids are exposed
+- Hardcoded URL in AdService
+- Hardcoded and exposed SECRET_KEY in JwtService
