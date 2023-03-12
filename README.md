@@ -1,6 +1,11 @@
 # BREDEX Backend Test
 ## How to run
+- Maven  
 ```mvn spring-boot:run```
+- Docker  
+```docker build -t narrakos/bredex_test ```  
+```docker run -p 8080:8080 narrakos/bredex_test```
+
 
 ## Recommended data to be used for testing
 >**user**: Teszt Tamás  
